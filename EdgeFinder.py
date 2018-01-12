@@ -225,42 +225,7 @@ def edgeFindImage(percentEdgeTolerance, imageLocation):
     
     return finalImage
 
-def findPath(initialVertice, targetVertice):
-    if (targetVertice[0]-initialVertice[0] == 0):
-        vertexHelper = targetVertice[1]-initialVertice[1]
-        vertexHelperX = 0
-        vertexHelperY = vertexHelper
-    else:
-        vertexHelper = Fraction((targetVertice[1]-initialVertice[1]), (targetVertice[0]-initialVertice[0]))
-        vertexHelperX = vertexHelper.denominator
-        vertexHelperY = vertexHelper.numerator
-    absoluteVertexX = abs(vertexHelperX)
-    absoluteVertexY = abs(vertexHelperY)
-    steps = max(absoluteVertexX, absoluteVertexY)
-    pathList = []
-    if (vertexHelperX < 0):
-        vertexHelperX, vertexHelperY = vertexHelperY, vertexHelperX
-    for index in range(0,steps):
-        #Normalize the step size.
-        index = (index/steps)
-        #Calculating vertex for iteration.
-        pathList.append((int(initialVertice[0]+vertexHelperX*index), int(initialVertice[1]+vertexHelperY*index)))
-    pathList.append(targetVertice)
-    return pathList
-
-def drawTesselation(finalImage, initialVertice, targetVertice):
-    finalImageArray = finalImage.load()
-    pathList = findPath(initialVertice, targetVertice)
-    print(pathList)
-    #Occupying pixels with the path.
-    for index in range(0,len(pathList)):
-        finalImageArray[pathList[index][0],pathList[index][1]] = 0
-    return finalImage
-
-def tesselateImage(imageEdges):
-    print("inTesselatedImagesMethod")
-
-def main(percentEdgeTolerance, imageLocation, saveLocation, saveBoolean, tesselateBoolean):
+def main(percentEdgeTolerance, imageLocation, saveLocation, saveBoolean):
     imageEdges = edgeFindImage(percentEdgeTolerance, imageLocation)
     if (tesselateBoolean == 1):
         finalImage = tesselateImage(imageEdges)
@@ -270,32 +235,9 @@ def main(percentEdgeTolerance, imageLocation, saveLocation, saveBoolean, tessela
         finalImage.save(saveLocation)
     finalImage.show()
 
-    '''
-    #Creating a vertice map for the tesselator functionality.
-    tesselationImageVertices = []
-    for x in range(0,xDexMax):
-        for y in range(0,yDexMax):
-            if (x != xDexMin and x != xDexMax and y != yDexMin and y != yDexMax):
-                if (finalImageArray[x-1,y-1] == 0 and finalImageArray[x,y-1] == 0 and finalImageArray[x+1,y-1] == 0 and finalImageArray[x+1,y] == 0 and finalImageArray[x+1,y+1] == 0 and finalImageArray[x,y+1] == 0 and finalImageArray[x-1,y+1] == 0 and finalImageArray[x-1,y] == 0):
-                    tesselationImageVertices.append((x,y))
-
-    #Clearing the final image to make room for the tesselated version.
-    for x in range(0,xDexMax):
-        for y in range(0,yDexMax):
-            finalImageArray[x,y] = 255
-
-    
-    #Solving tesselation with drawTesselation function for each pair of vertices in the set of valid vertices (tesselationImageVertices).
-    for x in range(0,len(tesselationImageVertices)-6):
-        for y in range(x+1,x+6):
-            finalImage = drawTesselation(finalImage, tesselationImageVertices[x], tesselationImageVertices[y])
-    
-    '''
-
 edgeFindTolerance = 3.5
 imageLocation = "D:/Downloads/test.jpg"
 saveLocation = "D:/Downloads/tester.png"
 saveBoolean = 0
-tesselateBoolean = 0
 
-main(edgeFindTolerance, imageLocation, saveLocation, saveBoolean, tesselateBoolean)
+main(edgeFindTolerance, imageLocation, saveLocation, saveBoolean)
